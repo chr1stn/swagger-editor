@@ -1,20 +1,15 @@
-FROM alpine:3.4
+FROM registry.access.redhat.com/rhscl/nginx-110-rhel7:latest
 
-MAINTAINER fehguy
-
-RUN apk add --update nginx
-RUN mkdir -p /run/nginx
-
-COPY nginx.conf /etc/nginx/
+COPY nginx.conf /etc/opt/rh/rh-nginx110/nginx/
 
 # copy swagger files to the `/js` folder
-COPY ./index.html /usr/share/nginx/html/
-ADD ./dist/*.js /usr/share/nginx/html/dist/
-ADD ./dist/*.map /usr/share/nginx/html/dist/
-ADD ./dist/*.css /usr/share/nginx/html/dist/
-ADD ./dist/*.png /usr/share/nginx/html/dist/
-ADD ./docker-run.sh /usr/share/nginx/
+COPY ./index.html $HOME
+ADD ./dist/*.js $HOME/dist/
+ADD ./dist/*.map $HOME/dist/
+ADD ./dist/*.css $HOME/dist/
+ADD ./dist/*.png $HOME/dist/
+ADD ./docker-run.sh /opt/app-root
 
 EXPOSE 8080
 
-CMD ["sh", "/usr/share/nginx/docker-run.sh"]
+CMD ["sh", "/opt/app-root/docker-run.sh"]
